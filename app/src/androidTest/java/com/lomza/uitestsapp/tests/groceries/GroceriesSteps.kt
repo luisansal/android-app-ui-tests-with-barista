@@ -38,20 +38,27 @@ import cucumber.api.java.en.When
 import org.hamcrest.Matchers.*
 import org.junit.Rule
 import org.junit.runner.RunWith
+import java.lang.Exception
 
 @RunWith(AndroidJUnit4::class)
 class GroceriesSteps {
 
     @get:Rule
-    var activityRule = ActivityTestRule<GroceriesListActivity>(GroceriesListActivity::class.java, true, false)
+    var activityRule =
+        ActivityTestRule<GroceriesListActivity>(GroceriesListActivity::class.java, true, false)
 
     @Before
     fun setup() {
-        Intents.init()
+        try {
+            Intents.init()
+        } catch (e: Exception) {
+
+        }
     }
 
     @After
     fun cleanup() {
+        setup()
         Intents.release()
     }
 
@@ -64,7 +71,8 @@ class GroceriesSteps {
     fun i_see_groceries_list_screen() {
         intended(hasComponent(GroceriesListActivity::class.java.name))
 
-        val toolbarTitle = getInstrumentation().targetContext.getString(R.string.groceries_list_activity)
+        val toolbarTitle =
+            getInstrumentation().targetContext.getString(R.string.groceries_list_activity)
         assertToolbarTitle(R.id.vGroceriesListToolbar, toolbarTitle)
         assertDisplayed(R.string.groceries_list_header)
         assertRecyclerViewItemCount(R.id.vGroceriesRecyclerView, expectedItemCount = 10)
@@ -113,7 +121,8 @@ class GroceriesSteps {
         assertHasDrawable(R.id.imageViewCollapsing, R.drawable.groceries)
         assertToolbarTitle(R.id.vGroceryDetailsToolbar, grocery)
         assertDisplayed(R.id.vGroceryDetailsNoteEdit)
-        val noteHint = getInstrumentation().targetContext.getString(R.string.grocery_details_note_hint)
+        val noteHint =
+            getInstrumentation().targetContext.getString(R.string.grocery_details_note_hint)
         assertHint(R.id.vGroceryDetailsNoteEdit, noteHint)
         assertDisplayed(R.string.grocery_details_note_clear)
         assertEnabled(R.string.grocery_details_note_clear)
